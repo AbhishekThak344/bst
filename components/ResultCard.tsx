@@ -157,13 +157,6 @@ export function ResultCard({ result, isRunning, isPreparing = false, type, parti
               </p>
             </div>
           </div>
-
-          <div className="pt-3 pb-3 border-t border-zinc-700">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-zinc-400">Total RPC Time</span>
-              <span className="font-mono font-semibold text-blue-400 animate-pulse">--</span>
-            </div>
-          </div>
         </>
       )}
 
@@ -190,16 +183,6 @@ export function ResultCard({ result, isRunning, isPreparing = false, type, parti
                       isLiveRunning={!!isLiveRunning}
                     />
                   ))}
-                </div>
-              </div>
-
-              {/* Total RPC Time - always at bottom */}
-              <div className="pt-3 pb-3 border-t border-zinc-700">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-zinc-400">Total RPC Time</span>
-                  <span className={`font-mono font-semibold ${showMockData ? 'text-zinc-500' : isLiveRunning ? 'text-yellow-400' : 'text-emerald-400'}`}>
-                    {showMockData ? '--' : animatedTotalRPCTime}ms
-                  </span>
                 </div>
               </div>
 

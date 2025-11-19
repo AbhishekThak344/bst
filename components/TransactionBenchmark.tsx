@@ -134,12 +134,25 @@ export function TransactionBenchmark() {
     let syncNonce = 0;
     
     if (!prefetchOptions.nonce) {
-      // Fetch nonces from the network
+      // Fetch nonces from the network using temporary clients that don't log to transaction arrays
+      const tempAsyncClient = createBenchmarkClients(
+        asyncAccount,
+        () => {}, // Don't log these setup calls
+        undefined,
+        prefetchOptions.chainId
+      );
+      const tempSyncClient = createBenchmarkClients(
+        syncAccount,
+        () => {}, // Don't log these setup calls
+        undefined,
+        prefetchOptions.chainId
+      );
+      
       [asyncNonce, syncNonce] = await Promise.all([
-        asyncClients.publicClient.getTransactionCount({
+        tempAsyncClient.publicClient.getTransactionCount({
           address: asyncAccount.address,
         }),
-        syncClients.publicClient.getTransactionCount({
+        tempSyncClient.publicClient.getTransactionCount({
           address: syncAccount.address,
         }),
       ]);
