@@ -4,6 +4,8 @@ A real-time blockchain transaction speed benchmarking tool with dynamic chain-th
 
 **100% open-source and unbiased.**
 
+🚀 **[Live Demo](https://transaction-simulator-beta.vercel.app/)**
+
 ## ✨ Features
 
 - **🎨 Dynamic Chain Theming**: UI automatically adapts colors and styling based on selected blockchain
