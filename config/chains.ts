@@ -5,6 +5,7 @@ import {
   monadTestnet,
   baseSepolia,
   sepolia,
+  optimismSepolia,
 } from "viem/chains";
 import * as allViemChains from "viem/chains";
 
@@ -27,11 +28,12 @@ const megaethTestnet = defineChain({
  * Featured chains shown in the chain selector
  */
 export const FEATURED_CHAINS: Chain[] = [
-  abstractTestnet,
-  monadTestnet,
-  megaethTestnet,
   baseSepolia,
   sepolia,
+  abstractTestnet,
+  optimismSepolia,
+  monadTestnet,
+  megaethTestnet,
 ];
 
 /**
@@ -44,10 +46,11 @@ export interface ChainUI {
 }
 
 const CHAIN_UI_MAP: Record<number, ChainUI> = {
-  [abstractTestnet.id]: { logo: "/abs.png", accentColor: "#10b981", shortName: "Abstract Sepolia" },
-  [monadTestnet.id]: { logo: "/monad.png", accentColor: "#a855f7", shortName: "Monad Testnet" },
-  [megaethTestnet.id]: { logo: "/megaeth.png", accentColor: "#f59e0b", shortName: "MegaETH Testnet" },
+  [abstractTestnet.id]: { logo: "/abs.png", accentColor: "#00ff88", shortName: "Abstract Sepolia" },
+  [monadTestnet.id]: { logo: "/monad.png", accentColor: "#9333ea", shortName: "Monad Testnet" },
+  [megaethTestnet.id]: { logo: "/megaeth.png", accentColor: "#ff6b00", shortName: "MegaETH Testnet" },
   [baseSepolia.id]: { logo: "/base.svg", accentColor: "#0052FF", shortName: "Base Sepolia" },
+  [optimismSepolia.id]: { logo: "/eth.svg", accentColor: "#ff0420", shortName: "Optimism Sepolia" },
   [sepolia.id]: { logo: "/eth.svg", accentColor: "#627EEA", shortName: "Sepolia" },
 };
 
@@ -99,7 +102,7 @@ export function isZkSyncChain(chainId: number): boolean {
 /**
  * Default chain
  */
-export const DEFAULT_CHAIN = abstractTestnet;
+export const DEFAULT_CHAIN = baseSepolia;
 
 /**
  * Get all viem chains as an array
