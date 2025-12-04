@@ -46,7 +46,7 @@ export function useAnimatedCounter(
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [targetValue, duration]);
+  }, [targetValue, duration, displayValue]);
 
   return displayValue;
 }
