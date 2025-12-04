@@ -103,27 +103,27 @@ export function ResultCard({
     >
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
-          <p className="text-sm text-zinc-400 font-mono">{subtitle}</p>
+          <h3 className="text-xl font-black text-white mb-2 tracking-wider">{title.toUpperCase()}</h3>
+          <p className="text-sm text-zinc-400 font-mono tracking-wide">{subtitle.toUpperCase()}</p>
         </div>
         {result && (
           <span
-            className={`px-2 py-1 rounded text-xs font-semibold ${result.status === "success" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+            className={`px-2 py-1 rounded text-xs font-bold tracking-wide ${result.status === "success" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
               }`}
           >
-            {result.status === "success" ? "✓ Success" : "✗ Error"}
+            {result.status === "success" ? "✓ SUCCESS" : "✗ ERROR"}
           </span>
         )}
         {isLiveRunning && (
           <span
-            className="px-2 py-1 rounded text-xs font-semibold flex items-center gap-1"
+            className="px-2 py-1 rounded text-xs font-bold flex items-center gap-1 tracking-wide"
             style={{
               backgroundColor: `${ui.accentColor}20`,
               color: ui.accentColor,
             }}
           >
             <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: ui.accentColor }} />
-            Live
+            LIVE
           </span>
         )}
       </div>
