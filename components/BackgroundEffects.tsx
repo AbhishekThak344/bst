@@ -1,6 +1,25 @@
 import Image from "next/image";
+import { Chain } from "viem";
+import { getChainUI } from "@/config/chains";
 
-export function BackgroundEffects() {
+interface BackgroundEffectsProps {
+  selectedChain: Chain;
+}
+
+export function BackgroundEffects({ selectedChain }: BackgroundEffectsProps) {
+  const ui = getChainUI(selectedChain.id);
+  
+  // Convert hex color to RGB for CSS custom properties
+  const hexToRgb = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 16, g: 185, b: 129 }; // fallback to emerald
+  };
+  
+  const rgb = hexToRgb(ui.accentColor);
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
       {/* Dark base */}
@@ -10,34 +29,64 @@ export function BackgroundEffects() {
       {/* Responsive: fewer and dimmer on mobile, full effect on desktop */}
 
       {/* Top left corner */}
-      <div className="absolute -top-40 -left-40 w-[700px] h-[700px] bg-cyan-500/5 md:bg-cyan-500/12 lg:bg-cyan-500/40 rounded-full blur-3xl animate-pulse-slow" />
+      <div 
+        className="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full blur-3xl animate-pulse-slow" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.05)` }}
+      />
 
       {/* Top right corner */}
-      <div className="absolute -top-32 -right-40 w-[800px] h-[800px] bg-purple-500/5 md:bg-purple-500/12 lg:bg-purple-500/35 rounded-full blur-3xl animate-pulse-slow" />
+      <div 
+        className="absolute -top-32 -right-40 w-[800px] h-[800px] rounded-full blur-3xl animate-pulse-slow" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.08)` }}
+      />
 
       {/* Top center - hidden on mobile and tablet */}
-      <div className="hidden lg:block absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-blue-400/30 rounded-full blur-[120px] animate-pulse-slower" />
+      <div 
+        className="hidden lg:block absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[120px] animate-pulse-slower" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)` }}
+      />
 
       {/* Middle right edge - hidden on small/medium, visible on large */}
-      <div className="hidden lg:block absolute top-1/2 -right-48 w-[650px] h-[650px] bg-violet-400/30 rounded-full blur-[100px] animate-pulse-slower" />
+      <div 
+        className="hidden lg:block absolute top-1/2 -right-48 w-[650px] h-[650px] rounded-full blur-[100px] animate-pulse-slower" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)` }}
+      />
 
       {/* Middle left edge - hidden on small/medium, visible on large */}
-      <div className="hidden lg:block absolute top-1/2 -left-48 w-[650px] h-[650px] bg-indigo-500/30 rounded-full blur-3xl animate-pulse-slower" />
+      <div 
+        className="hidden lg:block absolute top-1/2 -left-48 w-[650px] h-[650px] rounded-full blur-3xl animate-pulse-slower" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)` }}
+      />
 
       {/* Bottom left corner */}
-      <div className="absolute -bottom-40 -left-40 w-[750px] h-[750px] bg-teal-500/5 md:bg-teal-500/12 lg:bg-teal-500/30 rounded-full blur-3xl animate-pulse-slower" />
+      <div 
+        className="absolute -bottom-40 -left-40 w-[750px] h-[750px] rounded-full blur-3xl animate-pulse-slower" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.08)` }}
+      />
 
       {/* Bottom right corner */}
-      <div className="absolute -bottom-40 -right-40 w-[750px] h-[750px] bg-blue-500/5 md:bg-blue-500/12 lg:bg-blue-500/30 rounded-full blur-[120px] animate-pulse-slow" />
+      <div 
+        className="absolute -bottom-40 -right-40 w-[750px] h-[750px] rounded-full blur-[120px] animate-pulse-slow" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.08)` }}
+      />
 
       {/* Bottom center - hidden on mobile and tablet */}
-      <div className="hidden lg:block absolute bottom-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-emerald-500/25 rounded-full blur-[110px] animate-pulse-slower" />
+      <div 
+        className="hidden lg:block absolute bottom-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-[110px] animate-pulse-slower" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)` }}
+      />
 
       {/* Scattered accent - upper middle left - hidden on mobile and tablet */}
-      <div className="hidden lg:block absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-pink-500/25 rounded-full blur-[100px] animate-pulse-slow" />
+      <div 
+        className="hidden lg:block absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full blur-[100px] animate-pulse-slow" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` }}
+      />
 
       {/* Scattered accent - lower middle right - hidden on mobile and tablet */}
-      <div className="hidden lg:block absolute bottom-1/3 right-1/4 w-[550px] h-[550px] bg-cyan-400/25 rounded-full blur-[110px] animate-pulse-slower" />
+      <div 
+        className="hidden lg:block absolute bottom-1/3 right-1/4 w-[550px] h-[550px] rounded-full blur-[110px] animate-pulse-slower" 
+        style={{ backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1)` }}
+      />
 
 
       {/* 3D Lines overlay - positioned at bottom */}
@@ -58,7 +107,12 @@ export function BackgroundEffects() {
       <div className="absolute inset-0 bg-stars opacity-30" />
 
       {/* Radial gradient flares */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-linear-to-b from-cyan-500/10 via-transparent to-transparent" />
+      <div 
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px]" 
+        style={{ 
+          background: `linear-gradient(to bottom, rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.1), transparent, transparent)` 
+        }} 
+      />
 
       {/* Subtle gradient overlay for depth - much lighter */}
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-black/20 to-black/60" />
