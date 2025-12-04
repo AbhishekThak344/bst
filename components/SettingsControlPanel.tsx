@@ -29,9 +29,9 @@ export function SettingsControlPanel({
   selectedChain,
   onChainChange,
   isWalletConnected,
-  walletAddress,
+  walletAddress: _walletAddress,
   onConnectWallet,
-  onManageWallet,
+  onManageWallet: _onManageWallet,
   onSendTransaction,
   canSendTransaction,
   buttonText,
@@ -43,9 +43,33 @@ export function SettingsControlPanel({
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const ui = getChainUI(selectedChain.id);
+  
+  // Convert hex color to RGB for CSS custom properties
+  const hexToRgb = (hex: string) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 16, g: 185, b: 129 }; // fallback to emerald
+  };
+  
+  const rgb = hexToRgb(ui.accentColor);
+  
+  // Calculate luminance to determine if we need dark text
+  const getLuminance = (r: number, g: number, b: number) => {
+    const [rs, gs, bs] = [r, g, b].map(c => {
+      c = c / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+  };
+  
+  const luminance = getLuminance(rgb.r, rgb.g, rgb.b);
+  const textColor = luminance > 0.5 ? '#000000' : '#ffffff';
 
   // Filter viem chains based on search, excluding our featured chains
-  const featuredChainIds = new Set(FEATURED_CHAINS.map((c) => c.id));
+  const featuredChainIds = useMemo(() => new Set(FEATURED_CHAINS.map((c) => c.id)), []);
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
@@ -58,7 +82,7 @@ export function SettingsControlPanel({
             chain.nativeCurrency?.symbol?.toLowerCase().includes(query))
       )
       .slice(0, 10); // Limit results
-  }, [searchQuery]);
+  }, [searchQuery, featuredChainIds]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -151,9 +175,17 @@ export function SettingsControlPanel({
                 disabled={disabled || isSwitchingChain}
                 className={`
                   flex items-center gap-2 px-3 py-2 rounded-lg border transition-all w-full md:w-auto md:min-w-[200px]
-                  ${disabled || isSwitchingChain ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:border-zinc-600"}
-                  bg-zinc-800 border-zinc-700
+                  ${disabled || isSwitchingChain ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                  bg-zinc-800
                 `}
+              style={{
+                borderColor: disabled || isSwitchingChain 
+                  ? '#3f3f46' 
+                  : ui.accentColor,
+                boxShadow: !disabled && !isSwitchingChain 
+                  ? `0 0 0 1px ${ui.accentColor}20, 0 0 20px ${ui.accentColor}10` 
+                  : undefined
+              }}
               >
                 {isSwitchingChain ? (
                   <Loader2 className="w-5 h-5 text-zinc-400 animate-spin" />
@@ -261,7 +293,7 @@ export function SettingsControlPanel({
                         {/* No results message */}
                         {searchQuery && searchResults.length === 0 && (
                           <div className="border-t border-zinc-700 px-3 py-3 text-center">
-                            <span className="text-xs text-zinc-500">No chains found for "{searchQuery}"</span>
+                            <span className="text-xs text-zinc-500">No chains found for &ldquo;{searchQuery}&rdquo;</span>
                           </div>
                         )}
                       </>
@@ -283,14 +315,37 @@ export function SettingsControlPanel({
               }}
               disabled={!needsWalletConnection && (!canSendTransaction || isLoading)}
               className={`
-                  px-4 md:px-6 py-2 rounded-lg font-semibold text-base transition-all duration-200
-                  flex items-center justify-center gap-2
+                  px-4 md:px-6 py-2 rounded-lg font-bold text-base transition-all duration-200
+                  flex items-center justify-center gap-2 tracking-wide
                   ${
                     (canSendTransaction || needsWalletConnection) && !isLoading
-                      ? "bg-white text-zinc-900 shadow-lg shadow-white/5 cursor-pointer hover:bg-zinc-200 hover:text-zinc-700 hover:shadow-xl hover:shadow-white/10"
+                      ? "cursor-pointer shadow-lg"
                       : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                   }
                 `}
+              style={{
+                backgroundColor: (canSendTransaction || needsWalletConnection) && !isLoading 
+                  ? ui.accentColor 
+                  : undefined,
+                color: (canSendTransaction || needsWalletConnection) && !isLoading 
+                  ? textColor 
+                  : undefined,
+                boxShadow: (canSendTransaction || needsWalletConnection) && !isLoading 
+                  ? `0 4px 20px ${ui.accentColor}30, 0 0 0 1px ${ui.accentColor}40` 
+                  : undefined
+              }}
+              onMouseEnter={(e) => {
+                if ((canSendTransaction || needsWalletConnection) && !isLoading) {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = `0 8px 25px ${ui.accentColor}40, 0 0 0 1px ${ui.accentColor}50`;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if ((canSendTransaction || needsWalletConnection) && !isLoading) {
+                  e.currentTarget.style.transform = 'translateY(0px)';
+                  e.currentTarget.style.boxShadow = `0 4px 20px ${ui.accentColor}30, 0 0 0 1px ${ui.accentColor}40`;
+                }
+              }}
             >
               {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
               {buttonText}

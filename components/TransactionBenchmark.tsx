@@ -14,7 +14,11 @@ import { APP_CONFIG } from "@/constants/app-config";
 import { DEFAULT_CHAIN } from "@/config/chains";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export function TransactionBenchmark() {
+interface TransactionBenchmarkProps {
+  onChainChange?: (chain: Chain) => void;
+}
+
+export function TransactionBenchmark({ onChainChange }: TransactionBenchmarkProps) {
   const [selectedChain, setSelectedChain] = useState<Chain>(DEFAULT_CHAIN);
   const [isRunning, setIsRunning] = useState(false);
   const [isWaitingForWallet, setIsWaitingForWallet] = useState(false);
@@ -36,6 +40,9 @@ export function TransactionBenchmark() {
     setResult(null);
     setPartialResult(null);
     setElapsedTime(0);
+
+    // Notify parent component about chain change
+    onChainChange?.(chain);
 
     // If wallet is connected, switch to the new chain
     if (isConnected) {
